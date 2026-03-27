@@ -1,0 +1,197 @@
+{
+  "skill_name": "unit-tests-ts-js",
+  "evals": [
+    {
+      "id": 1,
+      "name": "price-discount-tests",
+      "prompt": "write tests for src/utils/price.ts",
+      "expected_output": "Jest TS tests in src/utils/__tests__/price.spec.ts covering normal price, zero price and negative discount error, using AAA and correct imports.",
+      "assertions": [
+        {
+          "name": "creates-tests-in-__tests__",
+          "text": "Creates or updates src/utils/__tests__/price.spec.ts for tests."
+        },
+        {
+          "name": "uses-aaa-structure",
+          "text": "All tests for calculateDiscount use explicit Arrange/Act/Assert comments in the correct order."
+        },
+        {
+          "name": "covers-zero-price",
+          "text": "There is at least one test that verifies behavior when price is 0."
+        },
+        {
+          "name": "covers-negative-discount-error",
+          "text": "There is at least one test that asserts an error when discount is negative."
+        },
+        {
+          "name": "does-not-mock-unit-under-test",
+          "text": "The calculateDiscount function or its module is not mocked or spied on."
+        }
+      ],
+      "files": [
+        {
+          "path": "src/utils/price.ts",
+          "content": "export function calculateDiscount(price: number, discount: number): number {\n  if (price < 0) {\n    throw new Error('price must be non-negative');\n  }\n\n  if (discount < 0) {\n    throw new Error('discount must be non-negative');\n  }\n\n  if (price === 0) {\n    return 0;\n  }\n\n  if (discount === 0) {\n    return price;\n  }\n\n  const cappedDiscount = Math.min(discount, 100);\n  const factor = 1 - cappedDiscount / 100;\n\n  return Math.round(price * factor * 100) / 100;\n}\n"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "user-service-mocking",
+      "prompt": "update tests for src/services/userService.ts",
+      "expected_output": "src/services/__tests__/userService.spec.ts updated with AAA Jest TS tests for getUserWithBalance: success, 404 not found and generic error, using mocked apiClient.",
+      "assertions": [
+        {
+          "name": "writes-tests-in-service-tests-dir",
+          "text": "Creates or updates src/services/__tests__/userService.spec.ts."
+        },
+        {
+          "name": "mocks-api-client-module",
+          "text": "Mocks the apiClient module (for example via jest.mock(\"../apiClient\"))."
+        },
+        {
+          "name": "has-success-test",
+          "text": "Contains a test where getUserWithBalance returns user data successfully."
+        },
+        {
+          "name": "has-not-found-test",
+          "text": "Contains a test for a 404 or 'user not found' response."
+        },
+        {
+          "name": "has-generic-error-test",
+          "text": "Contains a test for a generic error from apiClient.get."
+        },
+        {
+          "name": "does-not-mock-getUserWithBalance",
+          "text": "Does not mock or spy on getUserWithBalance itself; only external dependencies are mocked."
+        }
+      ],
+      "files": [
+        {
+          "path": "src/services/apiClient.ts",
+          "content": "export type UserResponse = {\n  id: string;\n  name: string;\n  balance: number;\n};\n\nexport type ApiError = Error & { status?: number };\n\n// This is intentionally very small and will be mocked in tests.\nexport const apiClient = {\n  async get<T>(url: string): Promise<T> {\n    throw new Error('apiClient.get should be mocked in tests');\n  },\n};\n"
+        },
+        {
+          "path": "src/services/userService.ts",
+          "content": "import { apiClient, UserResponse, ApiError } from './apiClient';\n\ntype UserWithBalance = {\n  id: string;\n  name: string;\n  balance: number;\n};\n\nexport async function getUserWithBalance(userId: string): Promise<UserWithBalance> {\n  try {\n    const user = await apiClient.get<UserResponse>(`/users/${userId}`);\n    return {\n      id: user.id,\n      name: user.name,\n      balance: user.balance,\n    };\n  } catch (error) {\n    const err = error as ApiError;\n\n    if (err.status === 404) {\n      throw Object.assign(new Error('User not found'), { status: 404 });\n    }\n\n    throw err;\n  }\n}\n"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "normalize-phone-tests",
+      "prompt": "write tests for src/helpers/normalizePhone.ts",
+      "expected_output": "Jest TS tests in src/helpers/__tests__/normalizePhone.spec.ts for normalizePhone: already normalized, spaces/dashes cleanup, invalid input throws; AAA and no duplicate scenarios.",
+      "assertions": [
+        {
+          "name": "creates-tests-in-helpers-__tests__",
+          "text": "Creates or updates src/helpers/__tests__/normalizePhone.spec.ts."
+        },
+        {
+          "name": "tests-normalized-input",
+          "text": "Has a test where input is already in normalized +7 format."
+        },
+        {
+          "name": "tests-spaces-and-dashes",
+          "text": "Has a test that verifies spaces and dashes are removed from the phone string."
+        },
+        {
+          "name": "tests-invalid-input-error",
+          "text": "Has a test that asserts an error is thrown for invalid input."
+        },
+        {
+          "name": "aaa-structure-used",
+          "text": "Tests for normalizePhone follow AAA with explicit comments."
+        }
+      ],
+      "files": [
+        {
+          "path": "src/helpers/normalizePhone.ts",
+          "content": "export function normalizePhone(raw: string): string {\n  const input = raw.trim();\n\n  if (input.length === 0) {\n    throw new Error('phone is empty');\n  }\n\n  // Remove spaces, dashes and parentheses.\n  const digits = input.replace(/[^0-9+]/g, '');\n\n  // Already normalized: +7XXXXXXXXXX\n  if (/^\+7\d{10}$/.test(digits)) {\n    return digits;\n  }\n\n  // Replace leading 8 or 7 with +7\n  if (/^[78]\d{10}$/.test(digits)) {\n    return `+7${digits.slice(1)}`;\n  }\n\n  throw new Error('invalid phone');\n}\n"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "extend-calculate-order-total-tests",
+      "prompt": "update tests for src/orders/calculateOrderTotal.ts",
+      "expected_output": "src/orders/__tests__/calculateOrderTotal.spec.ts extended (not replaced) with AAA Jest TS tests for discount coupon and free shipping, preserving existing tests.",
+      "assertions": [
+        {
+          "name": "modifies-existing-test-file",
+          "text": "Updates src/orders/__tests__/calculateOrderTotal.spec.ts rather than creating a new test file."
+        },
+        {
+          "name": "keeps-existing-tests",
+          "text": "Existing tests in calculateOrderTotal.spec.ts remain present (not deleted or renamed arbitrarily)."
+        },
+        {
+          "name": "adds-discount-test",
+          "text": "Adds at least one test that covers orders with a discount coupon."
+        },
+        {
+          "name": "adds-free-shipping-test",
+          "text": "Adds at least one test that covers orders that qualify for free shipping."
+        },
+        {
+          "name": "aaa-structure-new-tests",
+          "text": "New tests added for discount and free shipping follow AAA with comments."
+        }
+      ],
+      "files": [
+        {
+          "path": "src/orders/calculateOrderTotal.ts",
+          "content": "export type OrderItem = {\n  id: string;\n  price: number;\n  quantity: number;\n};\n\nexport type DiscountCoupon = {\n  code: string;\n  percent: number; // 0-100\n};\n\nexport type CalculateOrderTotalOptions = {\n  items: OrderItem[];\n  shippingCost: number;\n  freeShippingThreshold?: number;\n  coupon?: DiscountCoupon | null;\n};\n\nexport function calculateOrderTotal(options: CalculateOrderTotalOptions): number {\n  const { items, shippingCost, freeShippingThreshold, coupon } = options;\n\n  if (shippingCost < 0) {\n    throw new Error('shippingCost must be non-negative');\n  }\n\n  const itemsTotal = items.reduce((sum, item) => {\n    if (item.price < 0 || item.quantity < 0) {\n      throw new Error('item price and quantity must be non-negative');\n    }\n    return sum + item.price * item.quantity;\n  }, 0);\n\n  let total = itemsTotal;\n\n  if (coupon && coupon.percent > 0) {\n    const percent = Math.min(coupon.percent, 100);\n    total = total * (1 - percent / 100);\n  }\n\n  let finalShipping = shippingCost;\n  if (typeof freeShippingThreshold === 'number' && total >= freeShippingThreshold) {\n    finalShipping = 0;\n  }\n\n  return Math.round((total + finalShipping) * 100) / 100;\n}\n"
+        },
+        {
+          "path": "src/orders/__tests__/calculateOrderTotal.spec.ts",
+          "content": "import { calculateOrderTotal } from '../calculateOrderTotal';\n\ndescribe('calculateOrderTotal', () => {\n  it('calculates total for simple order without discounts', () => {\n    // Arrange\n    const total = calculateOrderTotal({\n      items: [\n        { id: '1', price: 100, quantity: 1 },\n        { id: '2', price: 50, quantity: 2 },\n      ],\n      shippingCost: 20,\n    });\n\n    // Assert\n    expect(total).toBe(220);\n  });\n});\n"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "react-non-ts-rejection",
+      "prompt": "write tests for src/components/Button.tsx",
+      "expected_output": "Assistant explains that unit-tests-ts-js handles only .ts/.js/.cjs/.mjs modules, not .tsx React components, so it does not generate tests and suggests a more appropriate approach or skill for React.",
+      "assertions": [
+        {
+          "name": "rejects-tsx",
+          "text": "Recognizes .tsx extension and states that unit-tests-ts-js does not handle React components."
+        },
+        {
+          "name": "no-tests-generated-for-tsx",
+          "text": "Does not create or modify any test files for src/components/Button.tsx."
+        }
+      ],
+      "files": [
+        {
+          "path": "src/components/Button.tsx",
+          "content": "import React from 'react';\n\nexport type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {\n  label: string;\n};\n\nexport const Button: React.FC<ButtonProps> = ({ label, ...rest }) => {\n  return (\n    <button type={rest.type || 'button'} {...rest}>\n      {label}\n    </button>\n  );\n};\n"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "vue-non-ts-rejection",
+      "prompt": "write tests for src/components/Modal.vue",
+      "expected_output": "Assistant explains that unit-tests-ts-js handles only .ts/.js/.cjs/.mjs modules, not .vue Vue components, so it does not generate tests and suggests a more appropriate approach or skill for Vue.",
+      "assertions": [
+        {
+          "name": "rejects-vue",
+          "text": "Recognizes .vue extension and states that unit-tests-ts-js does not handle Vue components."
+        },
+        {
+          "name": "no-tests-generated-for-vue",
+          "text": "Does not create or modify any test files for src/components/Modal.vue."
+        }
+      ],
+      "files": [
+        {
+          "path": "src/components/Modal.vue",
+          "content": "<template>\n  <div v-if=\"open\" class=\"modal\">\n    <div class=\"modal__backdrop\" />\n    <div class=\"modal__content\">\n      <header class=\"modal__header\">\n        <slot name=\"title\"></slot>\n        <button type=\"button\" class=\"modal__close\" @click=\"onClose\">\xD7</button>\n      </header>\n      <section class=\"modal__body\">\n        <slot></slot>\n      </section>\n    </div>\n  </div>\n</template>\n\n<script lang=\"ts\">\nimport { defineComponent } from 'vue';\n\nexport default defineComponent({\n  name: 'Modal',\n  props: {\n    open: {\n      type: Boolean,\n      required: true,\n    },\n  },\n  emits: ['close'],\n  setup(props, { emit }) {\n    const onClose = () => {\n      emit('close');\n    };\n\n    return { onClose };\n  },\n});\n</script>\n\n<style scoped>\n.modal {\n  position: fixed;\n  inset: 0;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.modal__backdrop {\n  position: absolute;\n  inset: 0;\n  background: rgba(0, 0, 0, 0.4);\n}\n\n.modal__content {\n  position: relative;\n  background: #fff;\n  padding: 16px;\n  border-radius: 4px;\n  min-width: 320px;\n}\n\n.modal__close {\n  border: none;\n  background: transparent;\n  cursor: pointer;\n}\n</style>\n"
+        }
+      ]
+    }
+  ]
+}

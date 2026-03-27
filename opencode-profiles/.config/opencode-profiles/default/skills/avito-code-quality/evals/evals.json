@@ -1,0 +1,58 @@
+{
+  "skill_name": "code-quality",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Я только что добавил новый обработчик в user-service, почисти код перед тем как я буду делать PR",
+      "expected_output": "Запускает avito fmt && avito lint из корня проекта, показывает вывод и анализирует ошибки если они есть",
+      "assertions": [
+        {
+          "name": "uses-avito-fmt",
+          "text": "Выполняет команду avito fmt (не gofmt или другой прямой форматтер)"
+        },
+        {
+          "name": "uses-avito-lint",
+          "text": "Выполняет команду avito lint (не golangci-lint или другой прямой линтер)"
+        },
+        {
+          "name": "analyzes-output",
+          "text": "Анализирует результат и сообщает пользователю о найденных проблемах или их отсутствии"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Запусти форматтер и линтер для моего сервиса",
+      "expected_output": "Запускает avito fmt && avito lint, при ошибках показывает полный вывод",
+      "assertions": [
+        {
+          "name": "runs-from-project-root",
+          "text": "Команды запускаются из корня проекта"
+        },
+        {
+          "name": "no-direct-tools",
+          "text": "Не использует gofmt, prettier, eslint или другие инструменты напрямую"
+        },
+        {
+          "name": "tail-on-first-run",
+          "text": "На первом запуске использует | tail -50 чтобы показать краткий вывод"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Только что поправил баг в payment-gateway, хочу убедиться что всё в порядке с кодом",
+      "expected_output": "Предлагает и запускает avito fmt && avito lint для проверки качества кода",
+      "assertions": [
+        {
+          "name": "offers-to-run",
+          "text": "Предлагает запустить avito fmt && avito lint после изменений кода"
+        },
+        {
+          "name": "correct-commands",
+          "text": "Использует правильные команды avito fmt и avito lint"
+        }
+      ]
+    }
+  ]
+}
