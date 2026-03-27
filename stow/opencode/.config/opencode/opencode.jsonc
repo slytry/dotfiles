@@ -1,0 +1,38 @@
+{
+	"$schema": "https://opencode.ai/config.json",
+	"model": "opencode/big-pickle",
+	"small_model": "opencode/minimax-m2.5-free",
+	"plugin": [
+		"@tarquinen/opencode-dcp@1.2.7",
+		"@franlol/opencode-md-table-formatter@0.0.3",
+		"@mohak34/opencode-notifier@latest"
+	],
+	"provider": {
+		"avito-responses": {
+			"npm": "@ai-sdk/openai",
+			"name": "avito responses API",
+			"options": {
+				"baseURL": "https://llm-manager.k.avito.ru/v1",
+				"apiKey": "3695da8e-b21f-4f34-9e52-6a575bf0efd8",
+				"headers": {
+					"X-Plugin-Name": "opencode"
+				}
+			},
+			"models": {
+				"gpt-5.3-codex": {
+					"name": "gpt-5.3-codex (strong, external)",
+					"tool_call": true,
+					"attachment": true,
+					"limit": {
+						"context": 400000,
+						"output": 128000
+					},
+					"cost": {
+						"input": 1.75,
+						"output": 14
+					}
+				}
+			}
+		}
+	}
+}

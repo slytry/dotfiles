@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "share": "disabled",
+  "plugin": [
+    "oh-my-opencode-slim"
+  ],
+  "mcp": {
+    "avito-cli-mcp": {
+      "type": "local",
+      "command": [
+        "avito",
+        "mcp"
+      ],
+      "enabled": true,
+      "environment": {
+        "HOME": "/Users/nanaumov"
+      }
+    },
+    "avito-ds": {
+      "type": "remote",
+      "enabled": true,
+      "url": "https://ds-figma-sync.k.avito.ru/mcp/web"
+    }
+  }
+}

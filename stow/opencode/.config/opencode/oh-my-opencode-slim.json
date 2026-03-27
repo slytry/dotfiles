@@ -1,0 +1,50 @@
+{
+  "preset": "manual",
+  "presets": {
+    "manual": {
+      "orchestrator": {
+        "model": "avito-responses/gpt-5.3-codex",
+        "skills": [
+          "*"
+        ],
+        "mcps": [
+          "websearch",
+          "avito-cli-mcp"
+        ]
+      },
+      "oracle": {
+        "model": "avito-responses/gpt-5.3-codex",
+        "skills": [],
+        "mcps": []
+      },
+      "designer": {
+        "model": "avito-responses/gpt-5.3-codex",
+        "skills": [
+          "agent-browser"
+        ],
+        "mcps": []
+      },
+      "explorer": {
+        "model": "avito-responses/gpt-5.3-codex",
+        "skills": [],
+        "mcps": []
+      },
+      "librarian": {
+        "model": "avito-responses/gpt-5.3-codex",
+        "skills": [],
+        "mcps": [
+          "avito-cli-mcp",
+          "websearch",
+          "context7",
+          "grep_app"
+        ]
+      },
+      "fixer": {
+        "model": "avito-responses/gpt-5.3-codex",
+        "skills": [],
+        "mcps": []
+      }
+    }
+  },
+  "balanceProviderUsage": false
+}

@@ -1,0 +1,57 @@
+version: '3'
+
+tasks:
+  default:
+    desc: Run full installation flow
+    cmds:
+      - task: install
+
+  setup:
+    desc: Run bootstrap setup script
+    cmds:
+      - bash ./scripts/setup.sh
+
+  stow:
+    desc: Apply stow packages to home directory
+    cmds:
+      - bash ./scripts/stow.sh
+
+  install:
+    desc: Run setup and stow sequentially
+    cmds:
+      - task: setup
+      - task: stow
+
+  doctor:
+    desc: Check required files and tools
+    cmds:
+      - |
+        set -e
+        for path in ./scripts/setup.sh ./scripts/stow.sh ./scripts/install.sh ./Brewfile ./stow; do
+          if [ ! -e "$path" ]; then
+            echo "❌ Missing: $path"
+            exit 1
+          fi
+        done
+        echo "✅ Required files are present"
+      - |
+        set -e
+        for cmd in bash git; do
+          if ! command -v "$cmd" >/dev/null 2>&1; then
+            echo "❌ Missing command: $cmd"
+            exit 1
+          fi
+        done
+        echo "✅ Required commands are available"
+
+        if command -v brew >/dev/null 2>&1; then
+          echo "✅ brew is installed"
+        else
+          echo "⚠️ brew is missing (setup task can install it)"
+        fi
+
+        if command -v stow >/dev/null 2>&1; then
+          echo "✅ stow is installed"
+        else
+          echo "⚠️ stow is missing (stow task can install it)"
+        fi

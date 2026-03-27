@@ -1,0 +1,12 @@
+
+# Files to ignore during stow linking
+\.DS_Store
+
+.+~          # emacs backup files
+\#.*\#       # emacs autosave files
+
+^/README.*
+^/LICENSE.*
+^/COPYING
+
+(^|/)codemap\.md$

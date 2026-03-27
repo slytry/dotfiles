@@ -1,0 +1,71 @@
+[user]
+	name = Nikita Naumov
+	email = nanaumov@avito.ru
+
+[core]
+	editor = code --wait
+	excludesfile = /Users/nanaumov/.gitignore_global
+
+[push]
+	default = simple
+	autoSetupRemote = true
+
+[commit]
+	# template = /Users/nanaumov/.stCommitMsg
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[alias]
+	# Основные
+	st = status -sb
+	a = add
+	aa = add --all
+	c = commit -v
+	cm = commit -m
+	ca = commit --amend
+	can = commit --amend --no-edit
+
+	# Ветки
+	b = branch
+	sw = switch
+	cb = checkout -b
+	bd = branch -d
+	r1 = reset @~1
+
+	# Логи
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	last = log -1 HEAD
+
+	# Push / Pull
+	p = push
+	pf = push --force-with-lease
+	pl = pull
+	ru = remote update
+
+	# Main branch
+	main = !git symbolic-ref refs/remotes/origin/HEAD | cut -d'/' -f4
+	remotesh = remote set-head origin --auto
+
+	# Работа с main
+	com = !git checkout $(git main)
+	upm = !git pull --rebase --autostash origin $(git main)
+
+	# Workflow
+	sc = !git add -A && git commit --amend --no-edit --no-verify && git push --force-with-lease
+
+	job = "!f() { \
+		if [ -z \"$1\" ]; then \
+			echo '❌ branch name required'; \
+			return 1; \
+		fi; \
+		git checkout $(git main) && git pull && git switch -c \"$1\"; \
+	}; f"
+
+	# Прочее
+	diff = diff
+	unstage = reset HEAD --
+	root = !git rev-parse --show-toplevel
