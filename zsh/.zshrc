@@ -63,7 +63,7 @@ alias find="fd"
 
 # Avito
 alias acl='avito ai claude --'
-alias bd='avito llm budget --model gpt-5.3-codex --unit "Jobs Employer&TnS&MNZ"'
+alias bd='avito llm budget --model gpt-5.3-codex --unit "Jobs Employer&TnS&MNZ" | awk '\''/^Модель:|Бюджет на сегодня|Бюджет юнита до конца года/'\'''
 alias a72='avito service k-branch-deploy --ttl 72h'
 alias ae2e='avito service system-tests run'
 
