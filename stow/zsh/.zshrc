@@ -47,7 +47,7 @@ alias nvm="fnm"
 alias oc='opencode'
 
 # Ai
-alias c='opencode run "Write a concise commit message"'
+alias c='opencode run "Write a concise commit message, commit and push code to git." --agent build' 
 
 # NAVIGATION
 eval "$(zoxide init zsh)"
